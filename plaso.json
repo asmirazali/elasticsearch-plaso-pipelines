@@ -29,7 +29,7 @@
       }
     }, {
       "pipeline": {
-        "name": "plaso-geoip",
+        "name": "geoip",
         "ignore_failure": true
       }
     }, {
