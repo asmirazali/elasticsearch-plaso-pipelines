@@ -26,7 +26,6 @@
       }
     },
     {
-      // unconfirmed
       "rename" : {
         "field" : "value_name",
         "target_field" : "path",

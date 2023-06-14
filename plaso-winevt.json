@@ -19,25 +19,9 @@
     }, {
       "gsub": {
         "field": "xml",
-        "target_field": "event_id",
-        "if": "ctx.xml=~/<EventID/",
-        "pattern": ".*<(EventID)[^>]*>(.*)<.(EventID).*",
-        "replacement": "$2"
-      }
-    }, {
-      "gsub": {
-        "field": "xml",
-        "target_field": "hostname",
-        "if": "ctx.xml=~/<Computer/",
-        "pattern": ".*<Computer[^>]*>([^<]*)</Computer>.*",
-        "replacement": "$1"
-      }
-    }, {
-      "gsub": {
-        "field": "xml",
         "target_field": "username",
         "if": "ctx.xml=~/<(User)>/",
-        "pattern": ".*<User[^>]*>([^<]*)</User>.*",
+        "pattern": ".*<User[^>]*>([^<]*)</User>.*+",
         "replacement": "$1"
       }
     }, {
@@ -45,7 +29,7 @@
         "field": "xml",
         "target_field": "username",
         "if": "ctx.xml=~/<EventID>1149<.*Param1>/",
-        "pattern": ".*<Param1>([^<]*)</Param1>.*",
+        "pattern": ".*<Param1>([^<]*)</Param1>.*+",
         "replacement": "$1"
       }
     }, {
@@ -53,7 +37,7 @@
         "field": "xml",
         "target_field": "target_username",
         "if": "ctx.xml=~/TargetUserName/",
-        "pattern": ".*<(Data.Name)=\"(TargetUserName)\">([^<]*)<.(Data)?(.|\\W)*",
+        "pattern": ".*<(Data.Name)=\"(TargetUserName)\">([^<]*)<.(Data)?(.|\\W)*+",
         "replacement": "$3"
       }
     },  {
@@ -61,29 +45,15 @@
         "field": "xml",
         "target_field": "subject_username",
         "if": "ctx.xml=~/SubjectUserName/",
-        "pattern": ".*<(Data.Name)=\"(SubjectUserName)\">([^<]*)<.(Data)?(.|\\W)*",
+        "pattern": ".*<(Data.Name)=\"(SubjectUserName)\">([^<]*)<.(Data)?(.|\\W)*+",
         "replacement": "$3"
       }
-    },  /*{
-      "rename": {
-        "field": "ctx.target_user_name",
-        "target_field": "username",
-        "if": "ctx.username == null && ctx.target_user_name != null && ctx.target_user_name != '-'"
-      }
-    }, */{
-      "gsub": {
-        "field": "xml",
-        "target_field": "logon_type",
-        "if": "ctx.xml=~/LogonType/",
-        "pattern": ".*<Data Name=\"LogonType\">(\\d*)<.*",
-        "replacement": "$1"
-      }
-    },  {
+    }, {
       "gsub": {
         "field": "xml",
         "target_field": "svc_img_path",
         "if": "ctx.source_name=='Service Control Manager' && ctx.event_id=='7045'",
-        "pattern": ".*<(Data.Name)=\"(ImagePath)\">([^<]*)<.(Data).*",
+        "pattern": ".*<(Data.Name)=\"(ImagePath)\">([^<]*)<.(Data).*+",
         "replacement": "$3"
       }
     },{
@@ -91,7 +61,7 @@
         "field": "xml",
         "target_field": "svc_name",
         "if": "ctx.source_name=='Service Control Manager' && ctx.event_id=='7045'",
-        "pattern": ".*<(Data.Name)=\"(ServiceName)\">([^<]*)<.(Data).*",
+        "pattern": ".*<(Data.Name)=\"(ServiceName)\">([^<]*)<.(Data).*+",
         "replacement": "$3"
       }
     },{
@@ -99,7 +69,7 @@
         "field": "xml",
         "target_field": "parent_procname",
         "if": "ctx.source_name=='Microsoft-Windows-Security-Auditing' && ctx.event_id=='4688'",
-        "pattern": ".*<(Data.Name)=\"(ParentProcessName)\">([^<]*)<.(Data).*",
+        "pattern": ".*<(Data.Name)=\"(ParentProcessName)\">([^<]*)<.(Data).*+",
         "replacement": "$3"
       }
     },{
@@ -107,7 +77,7 @@
         "field": "xml",
         "target_field": "child_procname",
         "if": "ctx.source_name=='Microsoft-Windows-Security-Auditing' && ctx.event_id=='4688'",
-        "pattern": ".*<(Data.Name)=\"(NewProcessName)\">([^<]*)<.(Data).*",
+        "pattern": ".*<(Data.Name)=\"(NewProcessName)\">([^<]*)<.(Data).*+",
         "replacement": "$3"
       }
     },{
@@ -115,7 +85,7 @@
         "field": "xml",
         "target_field": "proc_cmdline",
         "if": "ctx.source_name=='Microsoft-Windows-Security-Auditing' && ctx.event_id=='4688'",
-        "pattern": ".*<(Data.Name)=\"(CommandLine)\">([^<]*)<.(Data).*",
+        "pattern": ".*<(Data.Name)=\"(CommandLine)\">([^<]*)<.(Data).*+",
         "replacement": "$3"
       }
     },{
@@ -123,7 +93,7 @@
         "field": "xml",
         "target_field": "svc_filename",
         "if": "ctx.source_name=='Microsoft-Windows-Security-Auditing' && ctx.event_id=='4697'",
-        "pattern": ".*<(Data.Name)=\"(ServiceFileName)\">([^<]*)<.(Data).*",
+        "pattern": ".*<(Data.Name)=\"(ServiceFileName)\">([^<]*)<.(Data).*+",
         "replacement": "$3"
       }
     },{
@@ -139,7 +109,7 @@
         "field": "xml",
         "target_field": "schtask_cmd",
         "if": "ctx.source_name=='Microsoft-Windows-Security-Auditing' && (ctx.event_id=='4698' || ctx.event_id=='4699' || ctx.event_id=='4702')",
-        "pattern": ".*<(Command)>([^<]*)<\/(Command).*",
+        "pattern": ".*<(Command)>([^<]*)<\/(Command).*+",
         "replacement": "$2"
       }
     },{
@@ -147,7 +117,7 @@
         "field": "xml",
         "target_field": "logon_process_name",
         "if": "ctx.xml=~/LogonProcessName/",
-        "pattern": ".*<(Data.Name)=\"(LogonProcessName)\">([^<]*)<.(Data).*",
+        "pattern": ".*<(Data.Name)=\"(LogonProcessName)\">([^<]*)<.(Data).*+",
         "replacement": "$3"
       }
     }, {
@@ -155,7 +125,7 @@
         "field": "xml",
         "target_field": "process_name",
         "if": "ctx.xml=~/CallerProcessName/",
-        "pattern": ".*<(Data.Name)=\"(CallerProcessName)\">([^<]*)<.(Data).*",
+        "pattern": ".*<(Data.Name)=\"(CallerProcessName)\">([^<]*)<.(Data).*+",
         "replacement": "$3"
       }
     },  {
@@ -163,7 +133,7 @@
         "field": "xml",
         "target_field": "authentication_package_name",
         "if": "ctx.xml=~/AuthenticationPackageName/",
-        "pattern": ".*<(Data.Name)=\"(AuthenticationPackageName)\">([^<]*)<.(Data).*",
+        "pattern": ".*<(Data.Name)=\"(AuthenticationPackageName)\">([^<]*)<.(Data).*+",
         "replacement": "$3"
       }
     },  {
@@ -171,7 +141,7 @@
         "field": "xml",
         "target_field": "process_name",
         "if": "ctx.xml=~/=\"ProcessName\"/",
-        "pattern": ".*<(Data.Name)(=\"ProcessName\")>([^<]*)<.(Data).*",
+        "pattern": ".*<(Data.Name)(=\"ProcessName\")>([^<]*)<.(Data).*+",
         "replacement": "$3"
       }
     },  {
@@ -179,7 +149,7 @@
         "field": "xml",
         "target_field": "audit_source_name",
         "if": "ctx.xml=~/AuditSourceName/",
-        "pattern": ".*<(Data.Name)=\"(AuditSourceName)\">([^<]*)<.(Data).*",
+        "pattern": ".*<(Data.Name)=\"(AuditSourceName)\">([^<]*)<.(Data).*+",
         "replacement": "$3"
       }
     },  {
@@ -187,7 +157,7 @@
         "field": "xml",
         "target_field": "event_provider",
         "if": "ctx.xml=~/<Provider.Name/",
-        "pattern": ".*<(Provider.Name)=\"([^\"]+)\"(.Guid|<.|/).*",
+        "pattern": ".*<(Provider.Name)=\"([^\"]+)\"(.Guid|<.|/).*+",
         "replacement": "$2"
       }
     }, {
@@ -202,18 +172,10 @@
         "field": "xml",
         "target_field": "ip_address",
         "if": "ctx.xml=~/<(IPAddress|IpAddress|Address|Param1|Param3)>\\d+\\.[^<]*</",
-        "pattern": ".*<(IPAddress|IpAddress|Address|Param1|Param3)>(\\d+\\.[^<]*)</(IPAddress|IpAddress|Address|Param1|Param3)>.*",
+        "pattern": ".*<(IPAddress|IpAddress|Address|Param1|Param3)>(\\d+\\.[^<]*)</(IPAddress|IpAddress|Address|Param1|Param3)>.*+",
         "replacement": "$2"
       }
-    }, /*{
-      "gsub": {
-        "field": "xml",
-        "target_field": "ip_address",
-        "if": "ctx.xml=~/<.+(IPAddress|IpAddress|Address)=\"\\d+\\.>/",
-        "pattern": ".*<.+(IPAddress|IpAddress|Address)=\"([^\"]+)\".*",
-        "replacement": "$2"
-      }
-    }, */{
+    }, {
       "gsub": {
         "field": "xml",
         "target_field": "ip_address",
@@ -251,12 +213,7 @@
         "pattern": ".*<SessionID[^>]*>([^<]*)</SessionID>.*",
         "replacement": "$1"
       }
-    }, /*{
-     "remove": {
-        "field": "xml",
-        "ignore_missing": true
-      }
-    }, */{
+    }, {
       "remove": {
         "field": "strings_parsed",
         "ignore_missing": true
